@@ -27,6 +27,7 @@ When you're done, the file should look something like this (be sure to hit save)
 
 And finally, the `blacklist`. You can add handles to this list (inside the square brackets) to filter them out of all raffles you run with this script.
 
+# Running the Script
 Once that's all done, run the python file. 
 (This is easiest if you open a Command Prompt window in the folder you put everything else in and run
 `python.exe bsky_raffle_script.py`.
