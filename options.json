@@ -1,0 +1,14 @@
+{
+    "follow": true,
+    "like": true,
+    "repost": false,
+
+    "comment": false,
+    "image": false,
+    
+    "winners": 1,
+
+    "blacklist": [
+        "Enter blacklisted handles here separated by commas"
+    ]
+}
