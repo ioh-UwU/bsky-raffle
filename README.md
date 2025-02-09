@@ -48,7 +48,7 @@ And the winners for <your handle>'s raffle are:
 
 Thank you everyone for participating!
 ```
-Another thing to note: a `session_string.txt` file will be created when you log in. This is an alternative login method that tries to to use an existing session rather than starting a new one to reduce API calls. You should not edit this file, and nothing breaks if you delete it.
+Another thing to note: a `session_string.txt` file will be created when you log in. This is an alternative login method that tries to to use an existing session rather than starting a new one to reduce API calls. You should not edit this file, but nothing breaks if you delete it.
 
 And that's it! To change the raffle settings, mess around with `options.json`.
 If you run into any issues using this script, feel free to shoot me a DM on Bluesky! <br/>
