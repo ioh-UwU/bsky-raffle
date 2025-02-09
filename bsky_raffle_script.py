@@ -41,9 +41,6 @@ def get_candidates():
     print("\n")
 
     # Get relevant post data for likes, comments, and reposts
-    like_list = []
-    comment_list = []
-
     must_follow = RAFFLE_OPTIONS["follow"]
     must_like = RAFFLE_OPTIONS["like"]
     must_repost = RAFFLE_OPTIONS["repost"]
@@ -61,43 +58,37 @@ def get_candidates():
         repost_list = CLIENT.get_reposted_by(post_uri).reposted_by
         if len(repost_list) > 0:
             for repost in repost_list:
-                repost = repost.model_dump()
-                if must_follow and repost["viewer"]["followed_by"] is None:
+                if must_follow and repost.viewer.followed_by is None:
                     continue # Follow Check
-                if repost["handle"] not in repost_handles: # Skips duplicates just in case
-                    repost_handles.append(repost["handle"])
+                if repost.handle not in repost_handles: # Skips duplicates just in case
+                    repost_handles.append(repost.handle)
 
     if must_like:
         like_handles = []
         like_list = CLIENT.get_likes(post_uri).likes
         if len(like_list) > 0:
             for like in like_list:
-                like = like.model_dump()["actor"]
-                if must_follow and like["viewer"]["followed_by"] is None:
+                actor = like.actor
+                if must_follow and actor.viewer.followed_by is None:
                     continue # Follow Check
-                if like["handle"] not in like_handles: # Skips duplicates just in case
-                    like_handles.append(like["handle"])
+                if actor.handle not in like_handles: # Skips duplicates just in case
+                    like_handles.append(actor.handle)
 
     if must_comment:
         comment_handles = []
-        comment_list = CLIENT.get_post_thread(post_uri, 1).thread.model_dump()["replies"]
+        comment_list = CLIENT.get_post_thread(post_uri, 1).thread.replies
         if len(comment_list) > 0:
             for comment in comment_list:
-                comment = comment["post"]
-                print(comment["author"]["handle"])
-                try:
-                    print(comment["record"]["embed"]["py_type"] == "app.bsky.embed.images")
-                except TypeError:
-                    print("No Image")
-                if must_follow and comment["author"]["viewer"]["followed_by"] is None:
+                post = comment.post
+                if must_follow and post.author.viewer.followed_by is None:
                     continue # Follow Check
                 try:
-                    if comment_needs_image and comment["record"]["embed"]["py_type"] != "app.bsky.embed.images":
+                    if comment_needs_image and post.record.embed.py_type != "app.bsky.embed.images":
                         continue # Image Embed Check
                 except TypeError:
                     continue # No embed found.
-                if comment["author"]["handle"] not in comment_handles: # Skips duplicates
-                    comment_handles.append(comment["author"]["handle"])
+                if post.author.handle not in comment_handles: # Skips duplicates
+                    comment_handles.append(post.author.handle)
 
     # Compare all data to get the final candidate list
 
@@ -117,12 +108,16 @@ def get_candidates():
 def select_winners(final_handle_list):
     """Select the winners."""
     if len(final_handle_list) > 0:
+        final_handle_list = list(set(final_handle_list)) # Absolutely sure to remove all duplicates.
         shuffle(final_handle_list)
-        win_amount = RAFFLE_OPTIONS["winners"]
         winners = []
-        for _ in range(win_amount):
-            winners.append(final_handle_list.pop(randint(0, len(final_handle_list) - 1)))
-
+        win_amount = RAFFLE_OPTIONS["winners"]
+        if len(final_handle_list) > win_amount:
+            for _ in range(win_amount):
+                winners.append(final_handle_list.pop(randint(0, len(final_handle_list) - 1)))
+        else:
+            winners = final_handle_list
+            print("(There were fewer candidates than specified winners. Everyone wins!\n\n)")
         if win_amount == 1:
             print(f"And the winner for {PROFILE.handle}'s raffle is:\n")
         else:
