@@ -9,12 +9,12 @@ def account_login():
 
     try: # Try login with session string
         session = open("session_string.txt", encoding="utf-8").read()
-        profile = client.login(session)
+        client.login(session)
 
     except (FileNotFoundError, ValueError): # If session string missing or invalid, login normally
         credentials = load(open("login.json", encoding="utf-8"))
 
-        profile = client.login(credentials["handle"], credentials["password"])
+        client.login(credentials["handle"], credentials["password"])
         session = client.export_session_string()
 
         try:
@@ -22,22 +22,32 @@ def account_login():
 
         except FileExistsError:
             open("session_string.txt", "w", encoding="utf-8").write(session)
+    return client
 
-    return (client, profile)
-
-CLIENT, PROFILE = account_login()
+CLIENT = account_login()
 RAFFLE_OPTIONS = load(open("options.json", encoding="utf-8"))
+RAFFLE_HANDLE = ""
 
 def get_candidates():
     """Log in and prompt user for the post embed (HTML)."""
+    global RAFFLE_HANDLE
     while True:
-        post_uri = input("Paste the post embed code (HTML): ")
+        uri = input("Paste the post link: ").strip()
         try:
-            post_uri = [_ for _ in post_uri.split(" ") if "at://" in _][0]
-            post_uri = post_uri.split("\"")[1]
+            split_uri = uri.replace("//", "/").split("/")
+
+            link_type = "at" if uri[0:5] == "at://" else "https"
+            match link_type:
+                case "https":
+                    actor = CLIENT.app.bsky.actor.get_profile({"actor": split_uri[-3]})
+                case "at":
+                    actor = CLIENT.app.bsky.actor.get_profile({"actor": split_uri[1]})
+
+            RAFFLE_HANDLE, did = actor.handle, actor.did
+            post_uri = f"at://{did}/app.bsky.feed.post/{split_uri[-1]}"
             break
-        except (IndexError, ValueError):
-            print("ERROR: Could not find an AT URI in this code. Perhaps it's incorrect?")
+        except (IndexError, ValueError, exceptions.AtProtocolError):
+            print("ERROR: Invalid URL. Perhaps it's incorrect?")
     print("\n")
 
     # Get relevant post data for likes, comments, and reposts
@@ -50,8 +60,8 @@ def get_candidates():
 
     blacklist = [tag.replace("@", "") for tag in RAFFLE_OPTIONS["blacklist"]]
 
-    if PROFILE.did not in blacklist: # Ensures the host can't win
-        blacklist.append(PROFILE.did)
+    if RAFFLE_HANDLE not in blacklist: # Ensures the host can't win
+        blacklist.append(RAFFLE_HANDLE)
 
     if must_repost:
         repost_handles = []
@@ -119,9 +129,9 @@ def select_winners(final_handle_list):
             winners = final_handle_list
             print("(There were fewer candidates than specified winners. Everyone wins!\n\n)")
         if win_amount == 1:
-            print(f"And the winner for {PROFILE.handle}'s raffle is:\n")
+            print(f"And the winner for {RAFFLE_HANDLE}'s raffle is:\n")
         else:
-            print(f"And the winners for {PROFILE.handle}'s raffle are:\n")
+            print(f"And the winners for {RAFFLE_HANDLE}'s raffle are:\n")
 
         for winner in winners:
             print(winner)
@@ -141,9 +151,10 @@ def reroll(names: list[str], candidates: list[str]):
 
 def main():
     """Run the thing."""
+    candidates = get_candidates()
+    select_winners(candidates)
     try:
-        candidates = get_candidates()
-        select_winners(candidates)
+        pass
     except exceptions.AtProtocolError:
         print("Your handle and/or password are incorrect or you are being rate limited.")
         print("Make sure your login credentials are correct, and if the issue persists,")
