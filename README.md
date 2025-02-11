@@ -32,17 +32,12 @@ And finally, the `blacklist`. You can add handles to this list (inside the squar
 # Running the Script
 Once that's all done, run the Python file. 
 (This is easiest if you open a Command Prompt window in the folder you put everything else in and run
-`python.exe bsky_raffle_script.py`.
+`python bsky_raffle_script.py`.
 
-Assuming nothing wacky has happened, you will be prompted to paste in the embed code for your raffle post. <br/>
-The script extracts the `at://` URI that the API needs to retrieve the post. There's probably a better way to get this, but this is the easiest route I found. <br/>
+Assuming nothing wacky has happened, you will be prompted to paste in the link to the post you want to run the raffle on. <br/>
+This can be the regular HTTPS link or an AT URI if you've got that. All will work!
 
-This code can be found by clicking the three dots on your post and then the "Embed post" option. Then, triple-click the text field and hit `Ctrl + C` to copy it __as one line.__ (Pressing "Copy code" will copy it as multiple lines, which breaks the script.)
-
-![image](https://github.com/user-attachments/assets/4675b982-100f-41c2-9bb1-21afa196d38d)
-![image](https://github.com/user-attachments/assets/bbce4d4f-f92d-44ce-b9f4-221832d057e1)
-
-Paste this into the text field as one line and hit enter. You should receive text that looks something like:
+Then hit enter. You should receive text that looks something like:
 ```
 And the winners for <your handle>'s raffle are:
 
@@ -50,6 +45,8 @@ And the winners for <your handle>'s raffle are:
 
 Thank you everyone for participating!
 ```
+Otherwise, if there aren't any users that meet the criteria for your raffle, the script will tell you that.
+
 Another thing to note: a `session_string.txt` file will be created when you log in. This is an alternative login method that tries to use an existing session rather than starting a new one to reduce API calls. You should not edit this file, but nothing breaks if you delete it.
 
 And that's it! To change the raffle settings, mess around with `options.json`.
