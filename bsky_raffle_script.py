@@ -151,10 +151,9 @@ def reroll(names: list[str], candidates: list[str]):
 
 def main():
     """Run the thing."""
-    candidates = get_candidates()
-    select_winners(candidates)
     try:
-        pass
+        candidates = get_candidates()
+        select_winners(candidates)
     except exceptions.AtProtocolError:
         print("Your handle and/or password are incorrect or you are being rate limited.")
         print("Make sure your login credentials are correct, and if the issue persists,")
