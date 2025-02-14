@@ -20,12 +20,12 @@ When you're done, the file should look something like this (be sure to hit save)
 
 `options.json` holds the settings for the raffle itself. Change these based on what you want people to do to enter your raffle.
 
-`"follow"` If the user needs to be following you (default is `true`) <br/>
-`"like"` If the user needs to like the post (default is `true`) <br/>
-`"repost"` If the user needs to repost the post (default is `false`) <br/>
-`"comment"` If the user needs to comment on the post (default is `false`) <br/>
-`"image"` If the comment needs to have an image in it (default is `false`) <br/>
-`"winners"` The number of winners to select for the raffle (default is `1`) <br/>
+`"follow"` $~~~$ If the user needs to be following you&emsp;&emsp;&emsp;&emsp;&emsp;(default is `true`) <br/>
+`"like"` $~~~~~~~$ If the user needs to like the post&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(default is `true`) <br/>
+`"repost"` $~~~$ If the user needs to repost the post&emsp;&emsp;&ensp; &emsp;&ensp;&ensp;&ensp;&nbsp;(default is `false`) <br/>
+`"comment"` $~$ If the user needs to comment on the post&emsp;&ensp;&nbsp;&ensp;&ensp;(default is `false`) <br/>
+`"image"` $~~~~~$ If the comment needs to have an image in it &emsp;&nbsp;(default is `false`) <br/>
+`"winners"`$~~$ The number of winners to select for the raffle&nbsp;&ensp;&nbsp;(default is `1`) <br/>
 
 And finally, the `blacklist`. You can add handles to this list (inside the square brackets) to filter them out of all raffles you run with this script.
 
