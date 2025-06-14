@@ -1,3 +1,5 @@
+# Notice: I have created a web app that I am continuing to update and refine, which performs the same function as this script and then some, and with a more friendly user interface. See [that project's source repo](https://github.com/ioh-UwU/raffleSky).
+
 ## If you run into any issues using this script, please DM me on Bluesky! <br/> [@iohtheprotogen.art](https://iohtheprotogen.art/)
 
 # bsky-raffle
